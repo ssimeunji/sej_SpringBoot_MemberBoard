@@ -37,12 +37,4 @@ public class BoardDetailDTO {
         return boardDetailDTO;
     }
 
-    public static List<BoardDetailDTO> toBoardDetailDTOList(List<BoardEntity> boardEntityList) {
-        List<BoardDetailDTO> boardDetailDTOList = new ArrayList<>();
-        for(BoardEntity b: boardEntityList) {
-            boardDetailDTOList.add(toBoardDetailDTO(b));
-        }
-        return boardDetailDTOList;
-    }
-
 }

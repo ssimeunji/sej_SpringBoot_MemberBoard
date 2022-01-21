@@ -40,11 +40,12 @@ public class MemberController {
     // 로그인
     @PostMapping("login")
     public String login(@ModelAttribute MemberLoginDTO memberLoginDTO, HttpSession session) {
-        session.setAttribute(LOGIN_ID, memberLoginDTO.getMemberId());
+
         if (ms.login(memberLoginDTO)) {
             session.setAttribute(LOGIN_EMAIL, memberLoginDTO.getMemberEmail());
             return "redirect:/board/paging";
         } else {
+
             return "index";
         }
     }
@@ -91,6 +92,20 @@ public class MemberController {
         MemberDetailDTO memberDetailDTO = ms.findById(memberId);
         model.addAttribute("member", memberDetailDTO);
         return "member/myPage";
+    }
+
+    // 수정
+    @GetMapping("update")
+    public String updateForm(Model model, HttpSession session) {
+        String memberEmail = (String) session.getAttribute(LOGIN_EMAIL);
+        MemberDetailDTO member = ms.findByEmail(memberEmail);
+        model.addAttribute("member", member);
+        return "member/update";
+    }
+    @PostMapping("update")
+    public String update(@ModelAttribute MemberDetailDTO memberDetailDTO) {
+        Long memberId = ms.update(memberDetailDTO);
+        return "redirect:/member/myPage"+memberDetailDTO.getMemberId();
     }
 
 }

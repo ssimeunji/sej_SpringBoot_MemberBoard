@@ -8,10 +8,10 @@
     <style>
         body {padding: 40px;}
         table {width: 100%; margin-bottom: 20px;}
-        tr {height: 40px;}
+        tr {height: 60px;}
         thead > tr {border-bottom: 2px solid #333; border-top: 1px solid #ccc;}
         tbody > tr {border-bottom: 1px solid #ccc;}
-        th, td, .paging_box {text-align: center;}
+        th, td {text-align: center;}
         a {border: 1px solid #ccc; background-color: #efefef; color: #000; text-decoration: none; cursor: pointer; padding: 5px 15px; }
         a:hover {font-weight: bold; background-color: #333; color: #fff;}
     </style>
@@ -19,5 +19,29 @@
 </head>
 <body>
     <h2>MemberMyPage</h2>
+    <input type="button" onclick="location.href='/board/paging'" value="게시판으로 돌아가기" style="margin: 20px 0px;" />
+
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>이메일</th>
+            <th>비밀번호</th>
+            <th>이름</th>
+            <th>전화번호</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${member.memberId}"></td>
+            <td th:text="${member.memberEmail}"></td>
+            <td th:text="${member.memberPassword}"></td>
+            <td th:text="${member.memberName}"></td>
+            <td th:text="${member.memberPhone}"></td>
+            <td><a th:href="@{|/member/update/${member.memberId}|}">수정</a></td>
+        </tr>
+        </tbody>
+    </table>
 </body>
 </html>

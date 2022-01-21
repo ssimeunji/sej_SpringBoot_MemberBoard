@@ -9,17 +9,18 @@
     <style>
         body {padding: 40px;}
         table {width: 100%; margin-bottom: 20px;}
-        tr {height: 40px;}
+        tr {height: 60px;}
         thead > tr {border-bottom: 2px solid #333; border-top: 1px solid #ccc;}
         tbody > tr {border-bottom: 1px solid #ccc;}
         th, td {text-align: center;}
-        a {border: 1px solid #ccc; background-color: #efefef; color: #000; text-decoration: none; cursor: pointer; padding: 5px 15px; }
+        a {border: 1px solid #ccc; background-color: #efefef; color: #000; text-decoration: none; cursor: pointer; padding: 5px 15px;}
         a:hover {font-weight: bold; background-color: #333; color: #fff;}
+        .read_only {border: none; font-weight: bold; text-align: right; margin-right: 10px;}
     </style>
 </head>
 <body>
     <h2>BoardFindById</h2>
-    <input type="button" onclick="location.href='/board/paging'" value="전체목록" />
+    <input type="button" onclick="location.href='/board/paging'" value="전체목록" style="margin: 20px 0px;" />
     <table>
         <thead>
             <tr>
@@ -29,22 +30,76 @@
                 <th>내용</th>
                 <th>작성일시</th>
                 <th>최종 수정일시</th>
-                <th></th>
-                <th></th>
+                <th th:if="${session.loginEmail} == ${board.boardWriter}"></th>
+                <th th:if="${session.loginEmail} == ${board.boardWriter}"></th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td th:text="${boardDetailDTO.boardId}"></td>
-                <td th:text="${boardDetailDTO.boardWriter}"></td>
-                <td th:text="${boardDetailDTO.boardTitle}"></td>
-                <td th:text="${boardDetailDTO.boardContents}"></td>
-                <td th:text="${boardDetailDTO.createTime}"></td>
-                <td th:text="${boardDetailDTO.updateTime}"></td>
-                <td><a th:href="@{|/board/update/${boardDetailDTO.boardId}|}">수정</a></td>
-                <td><a th:href="@{|/board/delete/${boardDetailDTO.boardId}|}">삭제</a></td>
+                <td th:text="${board.boardId}"></td>
+                <td th:text="${board.boardWriter}"></td>
+                <td th:text="${board.boardTitle}"></td>
+                <td th:text="${board.boardContents}"></td>
+                <td th:text="${board.createTime}"></td>
+                <td th:text="${board.updateTime}"></td>
+                <td th:if="${session.loginEmail} == ${board.boardWriter}"><a th:href="@{|/board/update/${board.boardId}|}">수정</a></td>
+                <td th:if="${session.loginEmail} == ${board.boardWriter}"><a th:href="@{|/board/delete/${board.boardId}|}">삭제</a></td>
             </tr>
         </tbody>
     </table>
+
+    <!-- comment -->
+    <div id="comment-write" style="margin: 40px 0px 20px 0px;">
+        <h4 style="margin-bottom: 20px;">Comment</h4>
+        <input type="text" id="commentWriter" name="commentWriter" th:value="${session.loginEmail}" readonly class="read_only" />
+        <input type="text" id="commentContents" placeholder="내용" />
+        <input type="button" id="comment-write-btn" value="등록" />
+
+    </div>
+
+    <div id="comment-area">
+        <table>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>작성자</th>
+                    <th>내용</th>
+                    <th>작성시간</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="comment: ${commentList}">
+                    <td th:text="${comment.commentId}"></td>
+                    <td th:text="${comment.commentWriter}"></td>
+                    <td th:text="${comment.commentContents}"></td>
+                    <td th:text="${comment.createTime}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
+<script>
+    $("#comment-write-btn").click(function (){
+        console.log('댓글등록 버튼 클릭');
+        const commentWriter = $("#commentWriter").val();
+        const commentContents = $("#commentContents").val();
+        const boardId = '[[${board.boardId}]]';
+        $.ajax({
+            type: 'post',
+            url: '/comment/save',
+            data: {
+                'commentWriter': commentWriter,
+                'commentContents': commentContents,
+                'boardId': boardId
+            },
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+            },
+            error: function () {
+                alert('ajax 실패');
+            }
+        });
+    });
+</script>
 </html>

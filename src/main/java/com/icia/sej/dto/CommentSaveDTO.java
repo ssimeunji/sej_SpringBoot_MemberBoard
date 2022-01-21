@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardPagingDTO {
+public class CommentSaveDTO {
+    private Long commentId;
     private Long boardId;
-    private String boardWriter;
-    private String boardTitle;
-    private int hits = 0;
+    private String commentWriter;
+    private String commentContents;
 }

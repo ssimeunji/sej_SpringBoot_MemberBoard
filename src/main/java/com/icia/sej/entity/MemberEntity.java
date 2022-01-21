@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +21,19 @@ public class MemberEntity extends BaseEntity {
     private Long id;
 
     @Column
+    @NotBlank
     private String memberEmail;
 
     @Column
+    @NotBlank
     private String memberPassword;
 
     @Column
+    @NotBlank
     private String memberName;
 
     @Column
+    @NotBlank
     private String memberPhone;
 //
 //    @Lob
@@ -41,6 +46,10 @@ public class MemberEntity extends BaseEntity {
     // 게시판 연관관계
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BoardEntity> boardEntityList = new ArrayList<>();
+
+    // 댓글 연관관계
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CommentEntity> commentEntityList = new ArrayList<>();
 
     // 회원가입
     public static MemberEntity saveMember(MemberSaveDTO memberSaveDTO) {

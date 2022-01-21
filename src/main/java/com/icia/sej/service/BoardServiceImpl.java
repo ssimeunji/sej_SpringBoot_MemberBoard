@@ -16,9 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -51,7 +49,8 @@ public class BoardServiceImpl implements BoardService {
         page = (page == 1)? 0: (page-1);
         Page<BoardEntity> boardEntities = br.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "id")));
 
-        Page<BoardPagingDTO> boardList = boardEntities.map(board -> new BoardPagingDTO(board.getId(), board.getBoardWriter(), board.getBoardTitle()));
+        Page<BoardPagingDTO> boardList = boardEntities.map(board ->
+                new BoardPagingDTO(board.getId(), board.getBoardWriter(), board.getBoardTitle(), board.getHits()));
         return boardList;
     }
 
@@ -64,6 +63,7 @@ public class BoardServiceImpl implements BoardService {
             BoardEntity boardEntity = optionalBoardEntity.get();
             boardDetailDTO = BoardDetailDTO.toBoardDetailDTO(boardEntity);
         }
+
         return boardDetailDTO;
     }
 
@@ -80,5 +80,6 @@ public class BoardServiceImpl implements BoardService {
     public void deleteById(Long boardId) {
         br.deleteById(boardId);
     }
+
 
 }

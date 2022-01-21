@@ -13,16 +13,18 @@
     <title>SEJ</title>
 </head>
 <body>
-    <h2>BoardUpdate</h2>
-    <form action="/board/update" method="post">
+    <h2>MemberUpdate</h2>
+    <form action="/member/update" method="post">
         <p>번호</p>
-        <input type="text" id="boardId" name="boardId" th:value="${boardDetailDTO.boardId}" readonly class="read_only" />
-        <p>작성자</p>
-        <input type="text" id="boardWriter" name="boardWriter" th:value="${boardDetailDTO.boardWriter}" readonly class="read_only" />
-        <p>제목</p>
-        <input type="text" id="boardTitle" name="boardTitle" th:value="${boardDetailDTO.boardTitle}"/>
-        <p>내용</p>
-        <input type="text" id="boardContents" name="boardContents" th:value="${boardDetailDTO.boardContents}" />
+        <input type="text" id="memberId" name="memberId" th:value="${member.memberId}" readonly class="read_only" />
+        <p>이메일</p>
+        <input type="text" id="memberEmail" name="memberEmail" th:value="${member.memberEmail}" readonly class="read_only" />
+        <p>비밀번호</p>
+        <input type="text" id="memberPassword" name="memberPassword" th:value="${member.memberPassword}" readonly class="read_only" />
+        <p>이름</p>
+        <input type="text" id="memberName" name="memberName" th:value="${member.memberName}" />
+        <p>전화번호</p>
+        <input type="text" id="memberPhone" name="memberPhone" th:value="${member.memberPhone}" />
         <input type="submit" value="저장" style="display: block; margin-top: 20px" />
     </form>
 </body>

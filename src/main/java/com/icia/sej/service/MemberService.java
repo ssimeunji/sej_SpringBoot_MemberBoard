@@ -23,4 +23,8 @@ public interface MemberService {
     // 삭제
     void deleteById(Long memberId);
 
+    // 수정화면
+    MemberDetailDTO findByEmail(String memberEmail);
+    // 수정
+    Long update(MemberDetailDTO memberDetailDTO);
 }

@@ -16,4 +16,5 @@ public class BoardSaveDTO {
     private String boardTitle;
     @NotBlank
     private String boardContents;
+
 }

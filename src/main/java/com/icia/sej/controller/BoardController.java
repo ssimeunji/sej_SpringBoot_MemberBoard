@@ -5,6 +5,7 @@ import com.icia.sej.dto.BoardDetailDTO;
 import com.icia.sej.dto.BoardPagingDTO;
 import com.icia.sej.dto.BoardSaveDTO;
 import com.icia.sej.dto.BoardUpdateDTO;
+import com.icia.sej.entity.BoardEntity;
 import com.icia.sej.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,7 @@ public class BoardController {
 
     // 페이징처리된 전체목록
     @GetMapping("paging")
-    public String paging(@PageableDefault(page =1) Pageable pageable, Model model) {
+    public String paging(@PageableDefault(page =1) Pageable pageable, Model model, Long boardId) {
         Page<BoardPagingDTO> boardList = bs.paging(pageable);
         model.addAttribute("boardList", boardList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -67,7 +68,7 @@ public class BoardController {
     @GetMapping("{boardId}")
     public String findById(@PathVariable Long boardId, Model model) {
         BoardDetailDTO boardDetailDTO = bs.findById(boardId);
-        model.addAttribute("boardDetailDTO", boardDetailDTO);
+        model.addAttribute("board", boardDetailDTO);
         return "board/findById";
 
     }
