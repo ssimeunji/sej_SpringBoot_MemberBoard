@@ -47,11 +47,12 @@
             </tr>
         </tbody>
     </table>
+    <img th:src="@{|/img/${board.boardFileName}|}" />
 
     <!-- comment -->
     <div id="comment-write" style="margin: 40px 0px 20px 0px;">
         <h4 style="margin-bottom: 20px;">Comment</h4>
-        <input type="text" id="commentWriter" name="commentWriter" th:value="${session.loginEmail}" readonly class="read_only" />
+        <input type="text" th:text="${session.loginEmail}" readonly class="read_only" />
         <input type="text" id="commentContents" placeholder="내용" />
         <input type="button" id="comment-write-btn" value="등록" />
 
@@ -68,7 +69,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="comment: ${commentList}">
+                <tr th:each="comment: ${comment}">
                     <td th:text="${comment.commentId}"></td>
                     <td th:text="${comment.commentWriter}"></td>
                     <td th:text="${comment.commentContents}"></td>
@@ -81,22 +82,23 @@
 <script>
     $("#comment-write-btn").click(function (){
         console.log('댓글등록 버튼 클릭');
-        const commentWriter = $("#commentWriter").val();
+        const memberId = "[[${board.memberId}]]";
         const commentContents = $("#commentContents").val();
         const boardId = '[[${board.boardId}]]';
         $.ajax({
             type: 'post',
             url: '/comment/save',
             data: {
-                'commentWriter': commentWriter,
+                'memberId': memberId,
                 'commentContents': commentContents,
                 'boardId': boardId
             },
             dataType: 'json',
             success: function (result) {
                 console.log(result);
+                location.reload();
             },
-            error: function () {
+            error: function (result) {
                 alert('ajax 실패');
             }
         });

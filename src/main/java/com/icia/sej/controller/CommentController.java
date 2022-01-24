@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +23,11 @@ public class CommentController {
     private final CommentService cs;
 
     @PostMapping("save")
-    public @ResponseBody List<CommentDetailDTO> save(@ModelAttribute CommentSaveDTO commentSaveDTO, Model model) {
-        cs.save(commentSaveDTO);
+    public @ResponseBody List<CommentDetailDTO> save(@ModelAttribute CommentSaveDTO commentSaveDTO) {
+//        cs.save(commentSaveDTO);
+        Long commentId = cs.save(commentSaveDTO);
         List<CommentDetailDTO> commentList = cs.findAll(commentSaveDTO.getBoardId());
-        model.addAttribute("commentList", commentList);
+//        model.addAttribute("comment", commentList);
         return commentList;
     }
 }

@@ -14,7 +14,8 @@
 </head>
 <body>
     <h2>BoardSave</h2>
-    <form action="/board/save" method="post" th:object="${board}">
+    <form action="/board/save" method="post" th:object="${board}" enctype="multipart/form-data">
+        <input type="hidden" id="memberId" name="memberId" th:value="${session.loginId}" />
         <p>작성자</p>
         <input type="text" name="boardWriter" th:value="${session.loginEmail}" readonly class="read_only" />
 
@@ -24,8 +25,10 @@
         <p>내용</p>
         <input type="text" th:field="*{boardContents}" />
         <p th:if="${#fields.hasErrors('boardContents')}" th:errors="*{boardContents}" th:errorclass="field-error"></p>
+        <p>파일</p>
+        <input type="file" th:field="*{boardFile}" />
 
-        <input type="submit" th:value="저장" style="display: block; margin-top: 20px" />
+        <input type="submit" value="저장" style="display: block; margin-top: 20px" />
     </form>
 </body>
 </html>

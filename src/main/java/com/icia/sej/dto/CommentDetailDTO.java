@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class CommentDetailDTO {
     private Long commentId;
     private Long boardId;
+    private Long memberId;
     private String commentWriter;
     private String commentContents;
     private LocalDateTime createTime;
@@ -28,6 +29,7 @@ public class CommentDetailDTO {
         commentDetailDTO.setCommentContents(commentEntity.getCommentContents());
         commentDetailDTO.setCreateTime(commentEntity.getCreateTime());
         commentDetailDTO.setBoardId(commentEntity.getBoardEntity().getId());
+        commentDetailDTO.setMemberId(commentEntity.getMemberEntity().getId());
         return commentDetailDTO;
     }
 }

@@ -24,7 +24,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long save(CommentSaveDTO commentSaveDTO) {
         BoardEntity boardEntity = br.findById(commentSaveDTO.getBoardId()).get();
-        MemberEntity memberEntity = mr.findByMemberEmail(commentSaveDTO.getCommentWriter());
+        MemberEntity memberEntity = mr.findById(commentSaveDTO.getMemberId()).get();
         CommentEntity commentEntity = CommentEntity.toCommentSaveEntity(commentSaveDTO, boardEntity, memberEntity);
         return cr.save(commentEntity).getId();
     }
@@ -33,8 +33,8 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDetailDTO> findAll(Long boardId) {
         BoardEntity boardEntity = br.findById(boardId).get();
         List<CommentEntity> commentEntityList = boardEntity.getCommentEntityList();
-        List<CommentDetailDTO> commentList = new ArrayList<>();
-        for(CommentEntity c: commentEntityList) {
+        List<CommentDetailDTO> commentList = CommentEntity.toCommentEntityList(commentEntityList);
+        for (CommentEntity c: commentEntityList) {
             CommentDetailDTO commentDetailDTO = CommentDetailDTO.toCommentDetailDTO(c);
             commentList.add(commentDetailDTO);
         }

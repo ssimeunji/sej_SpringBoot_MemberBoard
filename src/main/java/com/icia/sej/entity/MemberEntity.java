@@ -20,7 +20,7 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column
+    @Column(unique = true)
     @NotBlank
     private String memberEmail;
 
@@ -35,13 +35,9 @@ public class MemberEntity extends BaseEntity {
     @Column
     @NotBlank
     private String memberPhone;
-//
-//    @Lob
-//    @Column(columnDefinition = "BLOB")
-//    private byte[] memberFile;
-//
-//    @Column
-//    private String memberFileName;
+
+    @Column
+    private String memberFileName;
 
     // 게시판 연관관계
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -52,14 +48,13 @@ public class MemberEntity extends BaseEntity {
     private List<CommentEntity> commentEntityList = new ArrayList<>();
 
     // 회원가입
-    public static MemberEntity saveMember(MemberSaveDTO memberSaveDTO) {
+    public static MemberEntity saveMemberEntity(MemberSaveDTO memberSaveDTO) {
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setMemberEmail(memberSaveDTO.getMemberEmail());
         memberEntity.setMemberPassword(memberSaveDTO.getMemberPassword());
         memberEntity.setMemberName(memberSaveDTO.getMemberName());
         memberEntity.setMemberPhone(memberSaveDTO.getMemberPhone());
-//        memberEntity.setMemberFile(memberEntity.getMemberFile());
-//        memberEntity.setMemberFileName(memberEntity.getMemberFileName());
+        memberEntity.setMemberFileName(memberSaveDTO.getMemberFileName());
 
         return memberEntity;
     }

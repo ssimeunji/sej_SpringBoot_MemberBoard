@@ -12,6 +12,8 @@ import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mybatis.spring.SqlSessionUtils.getSqlSession;
+
 @Entity
 @Getter @Setter
 @Table(name = "board_table")
@@ -32,34 +34,46 @@ public class BoardEntity extends BaseEntity {
     private String boardContents;
 
     @Column
-    private int hits = 0;
+    private String boardFileName;
+
+    @Column
+    private int boardHits;
 
     // 회원 연관관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
+
     // 댓글 연관관계
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList = new ArrayList<>();
 
-    public static BoardEntity saveBoardEntity(BoardSaveDTO boardSaveDTO, MemberEntity memberEntity) {
+    public static BoardEntity toSaveBoardEntity(BoardSaveDTO boardSaveDTO, MemberEntity memberEntity) {
         BoardEntity boardEntity = new BoardEntity();
         boardEntity.setBoardWriter(memberEntity.getMemberEmail());
         boardEntity.setBoardTitle(boardSaveDTO.getBoardTitle());
         boardEntity.setBoardContents(boardSaveDTO.getBoardContents());
+        boardEntity.setBoardFileName(boardSaveDTO.getBoardFileName());
         boardEntity.setMemberEntity(memberEntity);
+        boardEntity.setBoardHits(0);
         return boardEntity;
     }
 
     // 수정
-    public static BoardEntity updateBoardEntity(BoardUpdateDTO boardUpdateDTO) {
-       BoardEntity boardEntity = new BoardEntity();
-       boardEntity.setId(boardUpdateDTO.getBoardId());
-       boardEntity.setBoardWriter(boardUpdateDTO.getBoardWriter());
-       boardEntity.setBoardTitle(boardUpdateDTO.getBoardTitle());
-       boardEntity.setBoardContents(boardUpdateDTO.getBoardContents());
-       return boardEntity;
+    public static BoardEntity toUpdateBoardEntity(BoardUpdateDTO boardUpdateDTO, MemberEntity memberEntity) {
+        BoardEntity boardEntity = new BoardEntity();
+        boardEntity.setId(boardUpdateDTO.getBoardId());
+        boardEntity.setBoardWriter(memberEntity.getMemberEmail());
+        boardEntity.setBoardTitle(boardUpdateDTO.getBoardTitle());
+        boardEntity.setBoardContents(boardUpdateDTO.getBoardContents());
+        boardEntity.setBoardFileName(boardUpdateDTO.getBoardFileName());
+        boardEntity.setMemberEntity(memberEntity);
+        return boardEntity;
     }
+
+//    public void boardHitsUpdate(int num) {
+//        getSqlSession().update("boardHitsUpdate", num);
+//    }
 
 }

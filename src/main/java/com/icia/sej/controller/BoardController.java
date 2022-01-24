@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -34,27 +35,14 @@ public class BoardController {
         return "board/save";
     }
     @PostMapping("save")
-    public String save(@Validated @ModelAttribute("board") BoardSaveDTO boardSaveDTO, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            System.out.println("testFail");
-            return "board/save";
-        }
-        bs.save(boardSaveDTO);
-        System.out.println("test");
+    public String save(@ModelAttribute BoardSaveDTO boardSaveDTO) throws IOException {
+        Long boardId = bs.save(boardSaveDTO);
         return "redirect:/board/paging";
     }
 
-//    // 전체목록
-//    @GetMapping("findAll")
-//    public String findAll(Model model) {
-//        List<BoardDetailDTO> boardDetailDTOList = bs.findAll();
-//        model.addAttribute("boardList", boardDetailDTOList);
-//        return "board/findAll";
-//    }
-
     // 페이징처리된 전체목록
     @GetMapping("paging")
-    public String paging(@PageableDefault(page =1) Pageable pageable, Model model, Long boardId) {
+    public String paging(@PageableDefault(page =1) Pageable pageable, Model model) {
         Page<BoardPagingDTO> boardList = bs.paging(pageable);
         model.addAttribute("boardList", boardList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -67,8 +55,10 @@ public class BoardController {
     // 상세조회
     @GetMapping("{boardId}")
     public String findById(@PathVariable Long boardId, Model model) {
+//        BoardDetailDTO boardDetailDTO = bs.findById(boardId, boardEntity.getBoardHits() + 1);
         BoardDetailDTO boardDetailDTO = bs.findById(boardId);
         model.addAttribute("board", boardDetailDTO);
+        model.addAttribute("comment", boardDetailDTO.getCommentList());
         return "board/findById";
 
     }
@@ -77,14 +67,14 @@ public class BoardController {
     @GetMapping("update/{boardId}")
     public String updateForm(@PathVariable Long boardId, Model model) {
         BoardDetailDTO boardDetailDTO = bs.findById(boardId);
-        model.addAttribute("boardDetailDTO", boardDetailDTO);
+        model.addAttribute("board", boardDetailDTO);
         return "board/update";
     }
     @PostMapping("update")
     public String update(@ModelAttribute BoardUpdateDTO boardUpdateDTO) {
         bs.update(boardUpdateDTO);
 //        return "redirect:/board/paging"+boardUpdateDTO.getBoardId();
-        return "redirect:/board/paging";
+        return "redirect:/board/findById"+boardUpdateDTO.getBoardId();
     }
 
     // 삭제
@@ -93,5 +83,6 @@ public class BoardController {
         bs.deleteById(boardId);
         return "redirect:/board/paging";
     }
+
 
 }

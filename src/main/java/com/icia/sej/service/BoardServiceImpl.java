@@ -15,8 +15,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -27,42 +30,49 @@ public class BoardServiceImpl implements BoardService {
 
     // 등록
     @Override
-    public Long save(BoardSaveDTO boardSaveDTO) {
-        MemberEntity memberEntity = mr.findByMemberEmail(boardSaveDTO.getBoardWriter());
-        BoardEntity boardEntity = BoardEntity.saveBoardEntity(boardSaveDTO, memberEntity);
+    public Long save(BoardSaveDTO boardSaveDTO) throws IOException {
+        MultipartFile boardFile = boardSaveDTO.getBoardFile();
+        String boardFilename = boardFile.getOriginalFilename();
+        boardFilename = System.currentTimeMillis()+"-"+boardFilename;
+        String savePath = "C:\\Users\\WRAPCORE\\Desktop\\icia\\20220118_심은지_SpringBoot_회원제게시판\\MemberBoard\\src\\main\\resources\\static\\image\\"+boardFilename;
+        if (!boardFile.isEmpty()) {
+            boardFile.transferTo(new File(savePath));
+        }
+        boardSaveDTO.setBoardFileName(boardFilename);
+
+        MemberEntity memberEntity = mr.findById(boardSaveDTO.getMemberId()).get();
+        BoardEntity boardEntity = BoardEntity.toSaveBoardEntity(boardSaveDTO, memberEntity);
         Long boardId = br.save(boardEntity).getId();
         return boardId;
     }
 
-//    // 전체 목록
-//    @Override
-//    public List<BoardDetailDTO> findAll() {
-//        List<BoardEntity> boardEntityList = br.findAll();
-//        List<BoardDetailDTO> boardDetailDTOList = BoardDetailDTO.toBoardDetailDTOList(boardEntityList);
-//        return boardDetailDTOList;
-//    }
-
     // 전체목록 페이징
     @Override
+    @Transactional
     public Page<BoardPagingDTO> paging(Pageable pageable) {
         int page = pageable.getPageNumber();
         page = (page == 1)? 0: (page-1);
         Page<BoardEntity> boardEntities = br.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "id")));
 
         Page<BoardPagingDTO> boardList = boardEntities.map(board ->
-                new BoardPagingDTO(board.getId(), board.getBoardWriter(), board.getBoardTitle(), board.getHits()));
+//                new BoardPagingDTO(board.getId(), board.getBoardWriter(), board.getBoardTitle(), board.getBoardHits()));
+                new BoardPagingDTO(board.getId(), board.getMemberEntity().getMemberEmail(), board.getBoardTitle(), board.getBoardHits()));
         return boardList;
     }
 
     // 상세조회
     @Override
+    @Transactional
     public BoardDetailDTO findById(Long boardId) {
-        Optional<BoardEntity> optionalBoardEntity = br.findById(boardId);
-        BoardDetailDTO boardDetailDTO = null;
-        if (optionalBoardEntity.isPresent()) {
-            BoardEntity boardEntity = optionalBoardEntity.get();
-            boardDetailDTO = BoardDetailDTO.toBoardDetailDTO(boardEntity);
-        }
+        int boardHits = br.boardHits(boardId);
+        BoardEntity boardEntity = br.findById(boardId).get();
+
+//        Optional<BoardEntity> optionalBoardEntity = br.findById(boardId);
+        BoardDetailDTO boardDetailDTO = BoardDetailDTO.toBoardDetailDTOEntity(boardEntity);
+//        if (optionalBoardEntity.isPresent()) {
+//            BoardEntity boardEntity = optionalBoardEntity.get();
+//            boardDetailDTO = BoardDetailDTO.toBoardDetailDTO(boardEntity);
+//        }
 
         return boardDetailDTO;
     }
@@ -70,7 +80,8 @@ public class BoardServiceImpl implements BoardService {
     // 수정
     @Override
     public Long update(BoardUpdateDTO boardUpdateDTO) {
-        BoardEntity boardEntity = BoardEntity.updateBoardEntity(boardUpdateDTO);
+        MemberEntity memberEntity = mr.findById(boardUpdateDTO.getMemberId()).get();
+        BoardEntity boardEntity = BoardEntity.toUpdateBoardEntity(boardUpdateDTO, memberEntity);
         return br.save(boardEntity).getId();
 
     }

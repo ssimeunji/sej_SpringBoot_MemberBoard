@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardUpdateDTO {
     private Long boardId;
+    private Long memberId;
     private String boardWriter;
     private String boardTitle;
     private String boardContents;
+    private String boardFileName;
 }

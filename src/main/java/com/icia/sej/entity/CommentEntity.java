@@ -1,10 +1,13 @@
 package com.icia.sej.entity;
 
+import com.icia.sej.dto.CommentDetailDTO;
 import com.icia.sej.dto.CommentSaveDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -41,5 +44,12 @@ public class CommentEntity extends BaseEntity {
         commentEntity.setBoardEntity(boardEntity);
         commentEntity.setMemberEntity(memberEntity);
         return commentEntity;
+    }
+    public static List<CommentDetailDTO> toCommentEntityList(List<CommentEntity> commentEntityList) {
+        List<CommentDetailDTO> commentDetailDTOList = new ArrayList<>();
+        for (CommentEntity c: commentEntityList) {
+            commentDetailDTOList.add(CommentDetailDTO.toCommentDetailDTO(c));
+        }
+        return commentDetailDTOList;
     }
 }

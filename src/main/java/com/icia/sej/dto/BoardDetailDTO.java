@@ -1,6 +1,7 @@
 package com.icia.sej.dto;
 
 import com.icia.sej.entity.BoardEntity;
+import com.icia.sej.entity.CommentEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,24 +18,37 @@ import java.util.List;
 public class BoardDetailDTO {
 
     private Long boardId;
+    private Long memberId;
     private String boardWriter;
     private String boardTitle;
     private String boardContents;
+    private String boardFileName;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private List<CommentDetailDTO> commentList;
+    private int boardHits;
 
-    @Column(columnDefinition = "integer default 0")
-    private int count;
-
-    public static BoardDetailDTO toBoardDetailDTO(BoardEntity boardEntity) {
+    public static BoardDetailDTO toBoardDetailDTOEntity(BoardEntity boardEntity) {
         BoardDetailDTO boardDetailDTO = new BoardDetailDTO();
         boardDetailDTO.setBoardId(boardEntity.getId());
-        boardDetailDTO.setBoardWriter(boardEntity.getBoardWriter());
         boardDetailDTO.setBoardTitle(boardEntity.getBoardTitle());
+        boardDetailDTO.setBoardWriter(boardEntity.getBoardWriter());
         boardDetailDTO.setBoardContents(boardEntity.getBoardContents());
+        boardDetailDTO.setBoardFileName(boardEntity.getBoardFileName());
+        boardDetailDTO.setMemberId(boardEntity.getMemberEntity().getId());
         boardDetailDTO.setCreateTime(boardEntity.getCreateTime());
         boardDetailDTO.setUpdateTime(boardEntity.getUpdateTime());
+        boardDetailDTO.setBoardHits(boardEntity.getBoardHits());
+        boardDetailDTO.setCommentList(CommentEntity.toCommentEntityList(boardEntity.getCommentEntityList()));
         return boardDetailDTO;
+    }
+
+    public static List<BoardDetailDTO> toBoardDetailList(List<BoardEntity> boardEntityList) {
+        List<BoardDetailDTO> boardDetailDTOList = new ArrayList<>();
+        for (BoardEntity b: boardEntityList) {
+            boardDetailDTOList.add(toBoardDetailDTOEntity(b));
+        }
+        return boardDetailDTOList;
     }
 
 }
