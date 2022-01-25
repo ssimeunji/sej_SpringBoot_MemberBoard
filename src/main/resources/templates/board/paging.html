@@ -24,7 +24,7 @@
         <input type="button" onclick="location.href='/member/logout'" value="로그아웃" style="display: inline-block !important; margin: 0px 10px;" />
         <input type="button" onclick="location.href='/board/save'" value="등록" />
 
-        <input type="button" th:href="@{|/member/myPage/${session.loginId}|}" value="마이페이지" style="display: inline-block !important; margin-left: 40px;" />
+        <a th:href="@{|/member/myPage/${session.loginId}|}" style="display: inline-block !important; margin-left: 40px;">마이페이지</a>
         <input type="button" th:if="${session.loginEmail} == 'admin'" onclick="location.href='/member/admin'" value="관리자페이지" style="display: inline-block !important; margin-left: 40px;" />
     </div>
 

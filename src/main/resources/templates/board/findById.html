@@ -42,8 +42,12 @@
                 <td th:text="${board.boardContents}"></td>
                 <td th:text="${board.createTime}"></td>
                 <td th:text="${board.updateTime}"></td>
-                <td th:if="${session.loginEmail} == ${board.boardWriter}"><a th:href="@{|/board/update/${board.boardId}|}">수정</a></td>
-                <td th:if="${session.loginEmail} == ${board.boardWriter}"><a th:href="@{|/board/delete/${board.boardId}|}">삭제</a></td>
+                <td th:if="${session.loginEmail} == ${board.boardWriter}">
+                    <a th:href="@{|/board/update/${board.boardId}|}">수정</a>
+                </td>
+                <td th:if="${session.loginEmail} == ${board.boardWriter}">
+                    <a th:href="@{|/board/delete/${board.boardId}|}">삭제</a>
+                </td>
             </tr>
         </tbody>
     </table>

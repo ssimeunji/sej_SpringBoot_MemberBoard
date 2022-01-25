@@ -32,13 +32,13 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Long save(BoardSaveDTO boardSaveDTO) throws IOException {
         MultipartFile boardFile = boardSaveDTO.getBoardFile();
-        String boardFilename = boardFile.getOriginalFilename();
-        boardFilename = System.currentTimeMillis()+"-"+boardFilename;
-        String savePath = "C:\\Users\\WRAPCORE\\Desktop\\icia\\20220118_심은지_SpringBoot_회원제게시판\\MemberBoard\\src\\main\\resources\\static\\image\\"+boardFilename;
+        String boardFileName = boardFile.getOriginalFilename();
+        boardFileName = System.currentTimeMillis()+"-"+boardFileName;
+        String savePath = "C:\\Users\\WRAPCORE\\Desktop\\icia\\20220118_심은지_SpringBoot_회원제게시판\\MemberBoard\\src\\main\\resources\\static\\image\\"+boardFileName;
         if (!boardFile.isEmpty()) {
             boardFile.transferTo(new File(savePath));
         }
-        boardSaveDTO.setBoardFileName(boardFilename);
+        boardSaveDTO.setBoardFileName(boardFileName);
 
         MemberEntity memberEntity = mr.findById(boardSaveDTO.getMemberId()).get();
         BoardEntity boardEntity = BoardEntity.toSaveBoardEntity(boardSaveDTO, memberEntity);
@@ -64,9 +64,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public BoardDetailDTO findById(Long boardId) {
-        int boardHits = br.boardHits(boardId);
+        // Long boardHits = br.boardHits(boardId);
         BoardEntity boardEntity = br.findById(boardId).get();
-
+        boardEntity.setBoardHits(boardEntity.getBoardHits()+1);
+        br.save(boardEntity);
 //        Optional<BoardEntity> optionalBoardEntity = br.findById(boardId);
         BoardDetailDTO boardDetailDTO = BoardDetailDTO.toBoardDetailDTOEntity(boardEntity);
 //        if (optionalBoardEntity.isPresent()) {

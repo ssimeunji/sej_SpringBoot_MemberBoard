@@ -55,7 +55,6 @@ public class BoardController {
     // 상세조회
     @GetMapping("{boardId}")
     public String findById(@PathVariable Long boardId, Model model) {
-//        BoardDetailDTO boardDetailDTO = bs.findById(boardId, boardEntity.getBoardHits() + 1);
         BoardDetailDTO boardDetailDTO = bs.findById(boardId);
         model.addAttribute("board", boardDetailDTO);
         model.addAttribute("comment", boardDetailDTO.getCommentList());

@@ -79,11 +79,11 @@ public class MemberController {
         MemberDetailDTO memberDetailDTO = ms.findByEmail(memberLoginDTO);
         try {
             if (!memberDetailDTO.equals(null)) {
-                if (memberDetailDTO.getMemberEmail().equals("admin")) {
-                    session.setAttribute("loginId", memberDetailDTO.getMemberId());
-                    session.setAttribute("loginEmail", memberDetailDTO.getMemberEmail());
-                    return new ResponseEntity<String>("admin", HttpStatus.OK);
-                }
+//                if (memberDetailDTO.getMemberEmail().equals("admin")) {
+//                    session.setAttribute("loginId", memberDetailDTO.getMemberId());
+//                    session.setAttribute("loginEmail", memberDetailDTO.getMemberEmail());
+//                    return new ResponseEntity<String>("admin", HttpStatus.OK);
+//                }
                 session.setAttribute("loginId", memberDetailDTO.getMemberId());
                 session.setAttribute("loginEmail", memberDetailDTO.getMemberEmail());
                 String redirectURL = (String) session.getAttribute("redirectURL");
@@ -103,8 +103,9 @@ public class MemberController {
 
     // 로그아웃
     @GetMapping("logout")
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, Model model) {
         session.invalidate();
+        model.addAttribute("member", new MemberLoginDTO());
         return "index";
     }
 
