@@ -26,8 +26,12 @@ public class CommentController {
     public @ResponseBody List<CommentDetailDTO> save(@ModelAttribute CommentSaveDTO commentSaveDTO) {
 //        cs.save(commentSaveDTO);
         Long commentId = cs.save(commentSaveDTO);
+
+        log.info( "memberId : " + commentSaveDTO.getMemberId() );
+        log.info("DTO" + commentSaveDTO);
         List<CommentDetailDTO> commentList = cs.findAll(commentSaveDTO.getBoardId());
 //        model.addAttribute("comment", commentList);
+        System.out.println("commentSaveDTO = " + commentSaveDTO);
         return commentList;
     }
 }

@@ -1,9 +1,6 @@
 package com.icia.sej.service;
 
-import com.icia.sej.dto.BoardDetailDTO;
-import com.icia.sej.dto.BoardPagingDTO;
-import com.icia.sej.dto.BoardSaveDTO;
-import com.icia.sej.dto.BoardUpdateDTO;
+import com.icia.sej.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,4 +24,6 @@ public interface BoardService {
     // 삭제
     void deleteById(Long boardId);
 
+    // 검색
+    List<BoardDetailDTO> search(BoardSearchDTO boardSearchDTO);
 }

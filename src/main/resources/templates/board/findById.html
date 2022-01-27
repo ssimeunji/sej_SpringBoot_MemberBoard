@@ -51,11 +51,12 @@
             </tr>
         </tbody>
     </table>
-    <img th:src="@{|/img/${board.boardFileName}|}" />
+    <img th:src="@{|/image/${board.boardFileName}|}" />
 
     <!-- comment -->
     <div id="comment-write" style="margin: 40px 0px 20px 0px;">
         <h4 style="margin-bottom: 20px;">Comment</h4>
+
         <input type="text" th:text="${session.loginEmail}" readonly class="read_only" />
         <input type="text" id="commentContents" placeholder="내용" />
         <input type="button" id="comment-write-btn" value="등록" />
@@ -86,7 +87,7 @@
 <script>
     $("#comment-write-btn").click(function (){
         console.log('댓글등록 버튼 클릭');
-        const memberId = "[[${board.memberId}]]";
+        const memberId = "[[${session.loginId}]]";
         const commentContents = $("#commentContents").val();
         const boardId = '[[${board.boardId}]]';
         $.ajax({

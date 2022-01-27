@@ -28,6 +28,18 @@
         <input type="button" th:if="${session.loginEmail} == 'admin'" onclick="location.href='/member/admin'" value="관리자페이지" style="display: inline-block !important; margin-left: 40px;" />
     </div>
 
+    <div style="margin-bottom: 20px;">
+        <form action="/board/search" method="get">
+            <select name="select" id="select">
+                <option value="title">제목</option>
+                <option value="writer">작성자</option>
+            </select>
+            <input type="text" name="keyword" placeholder="검색어" />
+            <input type="submit" th:value="검색" />
+        </form>
+    </div>
+
+
     <table>
         <thead>
             <tr>

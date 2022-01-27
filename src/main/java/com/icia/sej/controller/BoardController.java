@@ -1,10 +1,7 @@
 package com.icia.sej.controller;
 
 import com.icia.sej.common.PagingConst;
-import com.icia.sej.dto.BoardDetailDTO;
-import com.icia.sej.dto.BoardPagingDTO;
-import com.icia.sej.dto.BoardSaveDTO;
-import com.icia.sej.dto.BoardUpdateDTO;
+import com.icia.sej.dto.*;
 import com.icia.sej.entity.BoardEntity;
 import com.icia.sej.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -81,6 +78,14 @@ public class BoardController {
     public String deleteById(@PathVariable("boardId") Long boardId) {
         bs.deleteById(boardId);
         return "redirect:/board/paging";
+    }
+
+    // 검색
+    @GetMapping("search")
+    public String search(@ModelAttribute BoardSearchDTO boardSearchDTO, Model model) {
+        List<BoardDetailDTO> boardDetailDTOList = bs.search(boardSearchDTO);
+        model.addAttribute("boardList", boardDetailDTOList);
+        return "board/search";
     }
 
 

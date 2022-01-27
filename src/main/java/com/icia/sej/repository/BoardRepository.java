@@ -7,8 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
+
+    // 검색
+    List<BoardEntity> findByBoardWriter(String keyword);
+    List<BoardEntity> findByBoardTitle(String keyword);
+
     // native query
     // jpql(java persistence query language)
     // 반드시 테이블에 대한 약칭을 써야함

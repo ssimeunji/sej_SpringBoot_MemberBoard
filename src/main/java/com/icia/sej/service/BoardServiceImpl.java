@@ -1,10 +1,7 @@
 package com.icia.sej.service;
 
 import com.icia.sej.common.PagingConst;
-import com.icia.sej.dto.BoardDetailDTO;
-import com.icia.sej.dto.BoardPagingDTO;
-import com.icia.sej.dto.BoardSaveDTO;
-import com.icia.sej.dto.BoardUpdateDTO;
+import com.icia.sej.dto.*;
 import com.icia.sej.entity.BoardEntity;
 import com.icia.sej.entity.MemberEntity;
 import com.icia.sej.repository.BoardRepository;
@@ -20,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +32,8 @@ public class BoardServiceImpl implements BoardService {
         MultipartFile boardFile = boardSaveDTO.getBoardFile();
         String boardFileName = boardFile.getOriginalFilename();
         boardFileName = System.currentTimeMillis()+"-"+boardFileName;
-        String savePath = "C:\\Users\\WRAPCORE\\Desktop\\icia\\20220118_심은지_SpringBoot_회원제게시판\\MemberBoard\\src\\main\\resources\\static\\image\\"+boardFileName;
+//        String savePath = "C:/Users/WRAPCORE/Desktop/icia/20220118_심은지_SpringBoot_회원제게시판/sej_SpringBoot_MemberBoard-main/src/main/resources/static/image/"+boardFileName;
+        String savePath = "C://Users//WRAPCORE//Desktop//icia//20220118_심은지_SpringBoot_회원제게시판//sej_SpringBoot_MemberBoard-main//src//main//resources//static//image//"+boardFileName;
         if (!boardFile.isEmpty()) {
             boardFile.transferTo(new File(savePath));
         }
@@ -91,6 +90,20 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void deleteById(Long boardId) {
         br.deleteById(boardId);
+    }
+
+    // 검색
+    @Override
+    public List<BoardDetailDTO> search(BoardSearchDTO boardSearchDTO) {
+        if (boardSearchDTO.getSelect().equals("writer")) {
+            List<BoardEntity> boardEntityList = br.findByBoardWriter(boardSearchDTO.getKeyword());
+            List<BoardDetailDTO> boardDetailDTOList = BoardDetailDTO.toBoardDetailList(boardEntityList);
+            return boardDetailDTOList;
+        } else {
+            List<BoardEntity> boardEntityList = br.findByBoardTitle(boardSearchDTO.getKeyword());
+            List<BoardDetailDTO> boardDetailDTOList = BoardDetailDTO.toBoardDetailList(boardEntityList);
+            return boardDetailDTOList;
+        }
     }
 
 

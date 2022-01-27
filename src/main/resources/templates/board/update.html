@@ -16,13 +16,14 @@
     <h2>BoardUpdate</h2>
     <form action="/board/update" method="post">
         <p>번호</p>
-        <input type="text" id="boardId" name="boardId" th:value="${boardDetailDTO.boardId}" readonly class="read_only" />
+        <input type="text" id="boardId" name="boardId" th:value="${board.boardId}" readonly class="read_only" />
         <p>작성자</p>
-        <input type="text" id="boardWriter" name="boardWriter" th:value="${boardDetailDTO.boardWriter}" readonly class="read_only" />
+        <input type="text" id="boardWriter" name="boardWriter" th:value="${board.boardWriter}" readonly class="read_only" />
         <p>제목</p>
-        <input type="text" id="boardTitle" name="boardTitle" th:value="${boardDetailDTO.boardTitle}"/>
+        <input type="text" id="boardTitle" name="boardTitle" th:value="${board.boardTitle}"/>
         <p>내용</p>
-        <input type="text" id="boardContents" name="boardContents" th:value="${boardDetailDTO.boardContents}" />
+        <input type="text" id="boardContents" name="boardContents" th:value="${board.boardContents}" />
+<!--        <img th:src="@{|/img/${board.boardFileName}|}" />-->
         <input type="submit" value="저장" style="display: block; margin-top: 20px" />
     </form>
 </body>

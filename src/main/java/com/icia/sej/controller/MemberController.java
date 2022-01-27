@@ -59,7 +59,6 @@ public class MemberController {
         }
     }
 
-
     // 로그인
 //    @PostMapping("login")
 //    public String login(@ModelAttribute MemberLoginDTO memberLoginDTO, HttpSession session) {
@@ -148,7 +147,7 @@ public class MemberController {
 
     // 수정
     @GetMapping("update/{memberId}")
-    public String updateForm(Model model, HttpSession session, @PathVariable Long memberId) {
+    public String updateForm(Model model, @PathVariable Long memberId) {
 //        String memberEmail = (String) session.getAttribute(LOGIN_EMAIL);
 //        MemberDetailDTO member = ms.findByEmail(memberEmail);
         MemberDetailDTO memberDetailDTO = ms.findById(memberId);
@@ -160,5 +159,7 @@ public class MemberController {
         Long memberId = ms.update(memberDetailDTO);
         return "redirect:/member/myPage/"+memberDetailDTO.getMemberId();
     }
+
+
 
 }
